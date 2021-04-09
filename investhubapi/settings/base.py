@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import decimal
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -46,7 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'rest_framework.authtoken',
+    'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -141,7 +142,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.AdminRenderer',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'investhubapi.utils.auth.CTokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
@@ -151,4 +152,28 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'investhubapi.utils.pagination.CustomPagination',
     'DATETIME_FORMAT': "%Y-%m-%d %H:%M:%S",
     'PAGE_SIZE': 15
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=10),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(hours=3),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }

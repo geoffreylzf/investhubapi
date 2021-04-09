@@ -16,6 +16,9 @@ Including another URLconf
 from django.urls import path
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+
+from core.views import auth
 
 
 @api_view(['GET'])
@@ -25,4 +28,12 @@ def index(_):
 
 urlpatterns = [
     path('', index),
+    path('api/auth/login/', TokenObtainPairView.as_view(), name='auth-token'),
+    path('api/auth/login/facebook/', auth.login_facebook),
+
+    path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='auth-token-refresh'),
+    path('api/auth/token/verify/', TokenVerifyView.as_view(), name='auth-token-verify'),
+
+    path('api/auth/profile/', auth.profile),
+    path('api/auth/change-password/', auth.change_password),
 ]
