@@ -13,5 +13,5 @@ class AuditTrail(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'core_audit_trail'
+        db_table = 'audit_trail'
         ordering = ['-id']

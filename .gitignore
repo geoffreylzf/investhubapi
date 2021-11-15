@@ -98,7 +98,7 @@ celerybeat-schedule
 *.sage.py
 
 # Environments
-eperp2api/settings/.env
+investhubapi/settings/.env
 .venv
 env/
 venv/

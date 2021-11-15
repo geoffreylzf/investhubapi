@@ -56,5 +56,5 @@ class User(AbstractUser):
     objects = UserManager()
 
     class Meta:
-        db_table = "core_user"
+        db_table = "user"
         ordering = ['-id']
