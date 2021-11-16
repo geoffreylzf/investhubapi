@@ -3,7 +3,7 @@ import json
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
-from eperp2api.utils.orm_query import filter_field_contain, filter_field_equal, filter_select_field_contain
+from investhubapi.utils.orm_query import filter_field_contain, filter_field_equal, filter_select_field_contain
 
 """
 # override
