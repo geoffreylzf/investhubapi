@@ -13,12 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path
+from django.urls import path, include
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
-from core.views import auth
+from core.views import auth, profile
 
 
 @api_view(['GET'])
@@ -33,7 +33,10 @@ urlpatterns = [
 
     path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='auth-token-refresh'),
     path('api/auth/token/verify/', TokenVerifyView.as_view(), name='auth-token-verify'),
-
-    path('api/auth/profile/', auth.profile),
     path('api/auth/change-password/', auth.change_password),
+
+    path('api/profile/', profile.profile),
+
+    path('api/', include('core.urls')),
+
 ]
