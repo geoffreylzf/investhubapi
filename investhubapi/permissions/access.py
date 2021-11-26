@@ -2,7 +2,7 @@ from django.conf import settings
 from rest_framework import permissions
 
 ALWAYS_ALLOW_ROUTES = [
-    'api/auth/profile/',
+    'api/auth/user/',
     'api/auth/change-password/',
 ]
 

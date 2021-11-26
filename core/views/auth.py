@@ -2,20 +2,12 @@ import json
 
 import requests
 from rest_framework import status
-from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from core.models import User
-from core.serializers.user import UserSerializer
-
-
-@api_view(['GET'])
-def profile(request):
-    serializer = UserSerializer(request.user)
-    return Response({"profile": serializer.data})
 
 
 @api_view(['POST'])

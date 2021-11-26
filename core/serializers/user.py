@@ -1,34 +1,39 @@
-from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 
 from core.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=False)
+    email = serializers.ReadOnlyField()
+    date_joined = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    is_active = serializers.ReadOnlyField()
     is_staff = serializers.ReadOnlyField()
     is_superuser = serializers.ReadOnlyField()
+
+    is_author = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = ('id',
                   'email',
                   'first_name', 'last_name',
-                  'password',
                   'date_joined',
                   'is_active',
                   'is_staff', 'is_superuser',
-                  'is_merchant_user',
-                  'is_customer',)
+                  'is_author',)
 
-    def create(self, validated_data):
-        validated_data['password'] = make_password(validated_data.get('password'))
-        return super().create(validated_data)
+    def get_is_author(self, o):
+        return hasattr(o, 'author')
 
-    def update(self, instance, validated_data):
-        if validated_data.get('password'):
-            validated_data['password'] = make_password(validated_data.get('password'))
-        else:
-            validated_data.pop('password', None)
-
-        return super().update(instance, validated_data)
+    # Following code is not use if using social auth
+    # def create(self, validated_data):
+    #     validated_data['password'] = make_password(validated_data.get('password'))
+    #     return super().create(validated_data)
+    #
+    # def update(self, instance, validated_data):
+    #     if validated_data.get('password'):
+    #         validated_data['password'] = make_password(validated_data.get('password'))
+    #     else:
+    #         validated_data.pop('password', None)
+    #
+    #     return super().update(instance, validated_data)
