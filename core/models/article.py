@@ -8,7 +8,7 @@ class Article(CRUSDModel):
     author = models.ForeignKey(Author, on_delete=models.DO_NOTHING, related_name="articles", )
     article_title = models.CharField(max_length=300)
 
-    is_draft = models.BooleanField(default=False)
+    is_publish = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'article'

@@ -58,3 +58,7 @@ class User(AbstractUser):
     class Meta:
         db_table = "user"
         ordering = ['-id']
+
+    @property
+    def is_author(self):
+        return hasattr(self, 'author')

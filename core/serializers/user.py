@@ -10,8 +10,6 @@ class UserSerializer(serializers.ModelSerializer):
     is_staff = serializers.ReadOnlyField()
     is_superuser = serializers.ReadOnlyField()
 
-    is_author = serializers.SerializerMethodField()
-
     class Meta:
         model = User
         fields = ('id',
@@ -21,9 +19,6 @@ class UserSerializer(serializers.ModelSerializer):
                   'is_active',
                   'is_staff', 'is_superuser',
                   'is_author',)
-
-    def get_is_author(self, o):
-        return hasattr(o, 'author')
 
     # Following code is not use if using social auth
     # def create(self, validated_data):

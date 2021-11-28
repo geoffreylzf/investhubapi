@@ -9,7 +9,7 @@ class Donate(CRUSDModel):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="donates", )
     article = models.ForeignKey(Article, on_delete=models.DO_NOTHING, related_name="donates", )
     amt = models.DecimalField(max_digits=15, decimal_places=2)
-
+    commission_pct = models.IntegerField(default=30)
     reference_no = models.CharField(max_length=100)
 
     class Meta:
