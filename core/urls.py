@@ -12,7 +12,7 @@ router.register(r'acc/banks', AccBankViewSet)
 router.register(r'topics', TopicViewSet)
 router.register(r'stock/counters', StockCounterViewSet)
 
-router.register(r'user/profile/author/articles/', UserArticleViewSet, basename='user-articles')
+router.register(r'user/profile/author/articles', UserArticleViewSet, basename='user-articles')
 
 urlpatterns = [
     path('user/profile/', user.profile),

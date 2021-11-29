@@ -26,6 +26,7 @@ class UserArticleSerializer(CModelSerializer):
         model = Article
         fields = ('id',
                   'article_title',
+                  'is_publish',
                   'paragraphs',
                   'created_at',
                   'updated_at',)
@@ -54,3 +55,13 @@ class UserArticleSerializer(CModelSerializer):
                                    fk_field='article')
 
         return instance
+
+
+class ListUserArticleSerializer(CModelSerializer):
+    class Meta:
+        model = Article
+        fields = ('id',
+                  'article_title',
+                  'is_publish',
+                  'created_at',
+                  'updated_at',)
