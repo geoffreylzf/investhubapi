@@ -11,9 +11,9 @@ def image_directory_path(instance, filename):
     return 'author/article/{0}'.format(name)
 
 
-class ArticleImg(CRUSDModel):
+class ArticleImgPath(CRUSDModel):
     path = models.ImageField(upload_to=image_directory_path)
 
     class Meta:
-        db_table = 'article_img'
+        db_table = 'article_img_path'
         ordering = ['id']

@@ -6,11 +6,11 @@ from investhubapi.utils.model import CRUSDModel
 
 
 class Comment(CRUSDModel):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="comments", )
-    article = models.ForeignKey(Article, on_delete=models.DO_NOTHING, related_name="comments",
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, db_constraint=False, related_name="comments", )
+    article = models.ForeignKey(Article, on_delete=models.DO_NOTHING, db_constraint=False, related_name="comments",
                                 blank=True, null=True)
 
-    reply_comment = models.ForeignKey('self', on_delete=models.DO_NOTHING, related_name="replies",
+    reply_comment = models.ForeignKey('self', on_delete=models.DO_NOTHING, db_constraint=False, related_name="replies",
                                       blank=True, null=True)
     content = models.CharField(max_length=500)
 

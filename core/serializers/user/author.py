@@ -4,7 +4,7 @@ from core.models import Author
 from investhubapi.utils.serializer import CModelSerializer
 
 
-class ProfileAuthorSerializer(CModelSerializer):
+class UserAuthorSerializer(CModelSerializer):
     commission_pct = serializers.ReadOnlyField()
 
     class Meta:

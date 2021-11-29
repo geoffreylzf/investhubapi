@@ -6,8 +6,8 @@ from investhubapi.utils.model import CRUSDModel
 
 
 class ArticleView(CRUSDModel):
-    article = models.ForeignKey(Article, on_delete=models.DO_NOTHING, related_name="views", )
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="%(class)s_related",
+    article = models.ForeignKey(Article, on_delete=models.DO_NOTHING, db_constraint=False, related_name="views", )
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, db_constraint=False,related_name="%(class)s_related",
                              blank=True, null=True)
     ip_address = models.GenericIPAddressField()
     view_datetime = models.DateTimeField()

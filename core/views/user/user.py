@@ -2,8 +2,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from core.serializers.author import ProfileAuthorSerializer
-from core.serializers.user import UserSerializer
+from core.serializers.user.author import UserAuthorSerializer
+from core.serializers.user.user import UserSerializer
 
 
 @api_view(['GET', 'PUT'])
@@ -22,7 +22,7 @@ def profile(request):
 def author_registration(request):
     user = request.user
     if not user.is_author:
-        serializer = ProfileAuthorSerializer(data=request.data)
+        serializer = UserAuthorSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(user=request.user)
         return Response()
@@ -34,10 +34,10 @@ def author_registration(request):
 def author(request):
     user = request.user
     if request.method == 'GET':
-        serializer = ProfileAuthorSerializer(user.author)
+        serializer = UserAuthorSerializer(user.author)
         return Response(serializer.data)
     elif request.method == 'PUT':
-        serializer = ProfileAuthorSerializer(user.author, data=request.data)
+        serializer = UserAuthorSerializer(user.author, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)

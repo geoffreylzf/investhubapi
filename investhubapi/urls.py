@@ -19,7 +19,6 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 from core.views import auth
-from core.views.user import profile
 
 
 @api_view(['GET'])
@@ -36,10 +35,6 @@ urlpatterns = [
     path('api/auth/token/verify/', TokenVerifyView.as_view(), name='auth-token-verify'),
 
     # path('api/auth/change-password/', auth.change_password),
-
-    path('api/user/profile/', profile.profile),
-    path('api/user/profile/author-registration/', profile.author_registration),
-    path('api/user/profile/author/', profile.author),
 
     path('api/', include('core.urls')),
 ]
