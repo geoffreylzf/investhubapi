@@ -8,14 +8,15 @@ from investhubapi.utils.serializer import CModelSerializer
 
 class UserArticleParagraphSerializer(CModelSerializer):
     id = serializers.IntegerField(required=False, allow_null=True)
-    img_path = serializers.ImageField(source="article_img_path.path", default=None, read_only=True)
+    article_img_path = serializers.ImageField(source="article_img.path", default=None, read_only=True)
 
     class Meta:
         model = ArticleParagraph
         fields = ('id',
                   'order',
+                  'type',
                   'content',
-                  'article_img_path', 'img_path',
+                  'article_img', 'article_img_path',
                   'is_supporter_view_only',)
 
 

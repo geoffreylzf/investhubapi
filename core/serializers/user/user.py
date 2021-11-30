@@ -10,11 +10,14 @@ class UserSerializer(serializers.ModelSerializer):
     is_staff = serializers.ReadOnlyField()
     is_superuser = serializers.ReadOnlyField()
 
+    user_img_path = serializers.ImageField(source="user_img.path", default=None, read_only=True)
+
     class Meta:
         model = User
         fields = ('id',
                   'email',
                   'first_name', 'last_name',
+                  'user_img', 'user_img_path',
                   'date_joined',
                   'is_active',
                   'is_staff', 'is_superuser',

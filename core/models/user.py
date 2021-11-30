@@ -50,6 +50,9 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
 
+    user_img = models.ForeignKey("core.UserImg", on_delete=models.DO_NOTHING, db_constraint=False,
+                                 related_name="%(class)s_related", blank=True, null=True)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 

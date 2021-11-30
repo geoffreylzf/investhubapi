@@ -4,6 +4,7 @@ from investhubapi.utils.viewset import CModelViewSet
 
 
 class UserArticleViewSet(CModelViewSet):
+    queryset = Article.objects.all()
     serializer_class = UserArticleSerializer
 
     def get_queryset(self):
