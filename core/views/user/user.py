@@ -4,7 +4,6 @@ from rest_framework.response import Response
 
 from core.serializers.user.author import UserAuthorSerializer
 from core.serializers.user.user import UserSerializer
-from investhubapi.utils import path
 
 
 @api_view(['GET', 'PUT'])
@@ -13,7 +12,8 @@ def profile(request):
         serializer = UserSerializer(request.user)
         data = serializer.data
         if data['user_img_path']:
-            data['user_img_path'] = path.build_image_path(request, data['user_img_path'])
+            data['user_img_path'] = request.build_absolute_uri(data['user_img_path'])
+        print(data)
         return Response({"profile": data})
     elif request.method == 'PUT':
         serializer = UserSerializer(request.user, data=request.data)
