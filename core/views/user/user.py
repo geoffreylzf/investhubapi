@@ -13,7 +13,6 @@ def profile(request):
         data = serializer.data
         if data['user_img_path']:
             data['user_img_path'] = request.build_absolute_uri(data['user_img_path'])
-        print(data)
         return Response({"profile": data})
     elif request.method == 'PUT':
         serializer = UserSerializer(request.user, data=request.data)
