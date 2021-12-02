@@ -1,9 +1,9 @@
 from core.models.stock_counter import StockCounter
 from core.serializers.stock_counter import StockCounterSerializer
-from investhubapi.utils.viewset import CModelViewSet
+from investhubapi.utils.viewset import CReadOnlyModelViewSet
 
 
-class StockCounterViewSet(CModelViewSet):
+class StockCounterViewSet(CReadOnlyModelViewSet):
     queryset = StockCounter.objects.all()
     serializer_class = StockCounterSerializer
 

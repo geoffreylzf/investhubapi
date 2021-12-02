@@ -1,9 +1,10 @@
 from django.conf import settings
 from rest_framework import permissions
 
-ALWAYS_ALLOW_ROUTES = [
-    'api/auth/user/',
-    'api/auth/change-password/',
+GET_SELECTION_ROUTES = [
+    'api/acc/banks',
+    'api/topic',
+    'api/stock/counters',
 ]
 
 RETRIEVE_METHODS = ['GET']
@@ -19,16 +20,16 @@ class AccessPermission(permissions.BasePermission):
         method = request.method
         params = request.query_params
 
-        if settings.DEBUG:
-            return True
-
-        if user.is_anonymous:
-            return False
-
-        if route in ALWAYS_ALLOW_ROUTES:
-            return True
-
         if user.is_superuser:
+            return True
+
+        if route.startswith("api/auth/"):
+            return True
+
+        if route in GET_SELECTION_ROUTES and method in RETRIEVE_METHODS:
+            return True
+
+        if route.startswith("api/user/") and not user.is_anonymous:
             return True
 
         return False

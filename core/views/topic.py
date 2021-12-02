@@ -1,9 +1,9 @@
 from core.models.topic import Topic
 from core.serializers.topic import TopicSerializer
-from investhubapi.utils.viewset import CModelViewSet
+from investhubapi.utils.viewset import CReadOnlyModelViewSet
 
 
-class TopicViewSet(CModelViewSet):
+class TopicViewSet(CReadOnlyModelViewSet):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
 
