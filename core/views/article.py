@@ -4,7 +4,7 @@ from investhubapi.utils.viewset import CReadOnlyModelViewSet
 
 
 class ArticleViewSet(CReadOnlyModelViewSet):
-    queryset = Article.objects.filter(is_publish=True).all()
+    queryset = Article.objects.filter(is_publish=True).order_by('-created_at').all()
     serializer_class = ArticleSerializer
 
     filter_field_contain_list = [

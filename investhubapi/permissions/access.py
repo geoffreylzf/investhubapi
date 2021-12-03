@@ -1,10 +1,11 @@
 from django.conf import settings
 from rest_framework import permissions
 
-GET_SELECTION_ROUTES = [
-    'api/acc/banks',
-    'api/topic',
-    'api/stock/counters',
+PUBLIC_ROUTES = [
+    'api/acc/banks/',
+    'api/topic/',
+    'api/stock/counters/',
+    'api/articles/',
 ]
 
 RETRIEVE_METHODS = ['GET']
@@ -26,13 +27,21 @@ class AccessPermission(permissions.BasePermission):
         if route.startswith("api/auth/"):
             return True
 
-        if route in GET_SELECTION_ROUTES and method in RETRIEVE_METHODS:
+        if is_start_with_public_routes(route) and method in RETRIEVE_METHODS:
             return True
 
         if route.startswith("api/user/") and not user.is_anonymous:
             return True
 
         return False
+
+
+def is_start_with_public_routes(route):
+    for r in PUBLIC_ROUTES:
+        if route.startswith(r):
+            return True
+
+    return False
 
 
 def reconstruct_route(route):
