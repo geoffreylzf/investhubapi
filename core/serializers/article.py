@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from core.models.article import Article
+from core.models.article_paragraph import ArticleParagraph
 from core.models.article_stock import ArticleStockCounter
 from core.models.article_topic import ArticleTopic
 from investhubapi.utils.serializer import CModelSerializer
@@ -22,12 +23,27 @@ class ArticleStockCounterSerializer(CModelSerializer):
         fields = ('stock_symbol',)
 
 
+class ArticleParagraphSerializer(CModelSerializer):
+    article_img_path = serializers.ImageField(source="article_img.path", default=None, read_only=True)
+
+    class Meta:
+        model = ArticleParagraph
+        fields = ('order',
+                  'type',
+                  'content',
+                  'article_img_path',
+                  'is_supporter_view_only',)
+
+
 class ArticleSerializer(CModelSerializer):
+    author = serializers.ReadOnlyField(source="author.id", default=None)
     author_first_name = serializers.ReadOnlyField(source="author.user.first_name", default=None)
     author_img_path = serializers.ImageField(source="author.user.user_img.path", default=None, read_only=True)
+    author_bio = serializers.ReadOnlyField(source="author.bio", default=None)
 
     topics = ArticleTopicSerializer(many=True)
     stock_counters = ArticleStockCounterSerializer(many=True)
+    paragraphs = ArticleParagraphSerializer(many=True, )
 
     # TODO view_count, comment_count
 
@@ -35,8 +51,11 @@ class ArticleSerializer(CModelSerializer):
         model = Article
         fields = ('id',
                   'article_title',
+                  'author',
                   'author_first_name',
                   'author_img_path',
+                  'author_bio',
+                  'paragraphs',
                   'topics',
                   'stock_counters',
                   'created_at',
