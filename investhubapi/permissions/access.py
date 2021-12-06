@@ -6,6 +6,7 @@ PUBLIC_ROUTES = [
     'api/topic/',
     'api/stock/counters/',
     'api/articles/',
+    'api/authors/',
 ]
 
 RETRIEVE_METHODS = ['GET']

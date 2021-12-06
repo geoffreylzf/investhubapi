@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from core.views.acc_bank import AccBankViewSet
 from core.views.article import ArticleViewSet
 from core.views.author import AuthorNewArticleViewSet
+from core.views.comment import ArticleCommentViewSet
 from core.views.stock_counter import StockCounterViewSet
 from core.views.topic import TopicViewSet
 from core.views.user import user
@@ -17,9 +18,10 @@ router.register(r'topics', TopicViewSet)
 router.register(r'stock/counters', StockCounterViewSet)
 
 router.register(r'articles', ArticleViewSet)
+router.register(r'articles/(?P<article_id>[0-9]+)/comments', ArticleCommentViewSet)
+
 # router.register(r'authors/(?P<author_id>[0-9]+)/articles', ArticleViewSet)
 router.register(r'authors/(?P<author_id>[0-9]+)/new-articles', AuthorNewArticleViewSet)
-# router.register(r'authors/(?P<author_id>[0-9]+)/hot-articles', ArticleViewSet)
 
 router.register(r'user/profile/author/article-imgs', UserArticleImgViewSet)
 router.register(r'user/profile/author/articles', UserArticleViewSet)
