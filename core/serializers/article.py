@@ -36,6 +36,7 @@ class ArticleParagraphSerializer(CModelSerializer):
 
 
 class ArticleSerializer(CModelSerializer):
+    user = serializers.ReadOnlyField(source="author.user.id", default=None)
     author = serializers.ReadOnlyField(source="author.id", default=None)
     author_first_name = serializers.ReadOnlyField(source="author.user.first_name", default=None)
     author_img_path = serializers.ImageField(source="author.user.user_img.path", default=None, read_only=True)
@@ -50,6 +51,7 @@ class ArticleSerializer(CModelSerializer):
     class Meta:
         model = Article
         fields = ('id',
+                  'user',
                   'article_title',
                   'author',
                   'author_first_name',

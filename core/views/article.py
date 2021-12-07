@@ -26,8 +26,9 @@ class ArticleViewSet(CReadOnlyModelViewSet):
 
         is_show_hidden_content = False
 
-        if not request.user.is_anonymous:
-            if request.user.author == instance.author:
+        user = request.user
+        if not user.is_anonymous:
+            if user.is_author and user.author == instance.author:
                 is_show_hidden_content = True
 
             # TODO check user is donator or not
