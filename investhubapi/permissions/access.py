@@ -1,7 +1,11 @@
-from django.conf import settings
 from rest_framework import permissions
 
-PUBLIC_ROUTES = [
+RETRIEVE_METHODS = ['GET']
+CREATE_METHODS = ['POST']
+UPDATE_METHODS = ['PUT', 'PATCH']
+DELETE_METHODS = ['DELETE']
+
+PUBLIC_START_ROUTES = [
     'api/acc/banks/',
     'api/topic/',
     'api/stock/counters/',
@@ -9,10 +13,11 @@ PUBLIC_ROUTES = [
     'api/authors/',
 ]
 
-RETRIEVE_METHODS = ['GET']
-CREATE_METHODS = ['POST']
-UPDATE_METHODS = ['PUT', 'PATCH']
-DELETE_METHODS = ['DELETE']
+AUTH_ROUTES = [
+    'api/articles/<article_id>/comments/$',
+    'api/articles/<article_id>/comments/<pk>/$',
+    'api/articles/<article_id>/comments/<comment_id>/replies/$',
+]
 
 
 class AccessPermission(permissions.BasePermission):
@@ -22,13 +27,20 @@ class AccessPermission(permissions.BasePermission):
         method = request.method
         params = request.query_params
 
-        if user.is_superuser:
-            return True
+        print(route)
+
+        # if user.is_superuser:
+        #     return True
 
         if route.startswith("api/auth/"):
             return True
 
         if is_start_with_public_routes(route) and method in RETRIEVE_METHODS:
+            return True
+
+        if route in AUTH_ROUTES \
+                and method in CREATE_METHODS + UPDATE_METHODS \
+                and not user.is_anonymous:
             return True
 
         if route.startswith("api/user/") and not user.is_anonymous:
@@ -38,7 +50,7 @@ class AccessPermission(permissions.BasePermission):
 
 
 def is_start_with_public_routes(route):
-    for r in PUBLIC_ROUTES:
+    for r in PUBLIC_START_ROUTES:
         if route.startswith(r):
             return True
 
