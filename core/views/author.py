@@ -5,7 +5,17 @@ from rest_framework.response import Response
 from core.models import Author
 from core.models.article import Article
 from core.serializers.article import ListArticleSerializer
+from core.serializers.author import AuthorSerializer
 from investhubapi.utils.viewset import CReadOnlyModelViewSet
+
+
+class AuthorViewSet(CReadOnlyModelViewSet):
+    queryset = Author.objects.order_by('-created_at').all()
+    serializer_class = AuthorSerializer
+
+    filter_field_contain_list = [
+        ("first_name", "user__first_name")
+    ]
 
 
 class AuthorNewArticleViewSet(CReadOnlyModelViewSet):

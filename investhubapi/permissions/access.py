@@ -17,6 +17,7 @@ AUTH_ROUTES = [
     'api/articles/<article_id>/comments/$',
     'api/articles/<article_id>/comments/<pk>/$',
     'api/articles/<article_id>/comments/<comment_id>/replies/$',
+    'api/articles/<article_id>/comments/<comment_id>/replies/<pk>/$',
 ]
 
 
@@ -27,7 +28,7 @@ class AccessPermission(permissions.BasePermission):
         method = request.method
         params = request.query_params
 
-        print(route)
+        # print(route)
 
         # if user.is_superuser:
         #     return True

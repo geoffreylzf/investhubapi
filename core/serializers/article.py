@@ -46,7 +46,7 @@ class ArticleSerializer(CModelSerializer):
     stock_counters = ArticleStockCounterSerializer(many=True)
     paragraphs = ArticleParagraphSerializer(many=True, )
 
-    # TODO view_count, comment_count
+    # TODO view_count
 
     class Meta:
         model = Article
@@ -71,7 +71,9 @@ class ListArticleSerializer(CModelSerializer):
     topics = ArticleTopicSerializer(many=True)
     stock_counters = ArticleStockCounterSerializer(many=True)
 
-    # TODO view_count, comment_count
+    comment_count = serializers.SerializerMethodField()
+
+    # TODO view_count
 
     class Meta:
         model = Article
@@ -81,5 +83,9 @@ class ListArticleSerializer(CModelSerializer):
                   'author_img_path',
                   'topics',
                   'stock_counters',
+                  'comment_count',
                   'created_at',
                   'updated_at',)
+
+    def get_comment_count(self, obj):
+        return obj.comments.count()
