@@ -18,7 +18,7 @@ class AuthorViewSet(CReadOnlyModelViewSet):
     ]
 
 
-class AuthorNewArticleViewSet(CReadOnlyModelViewSet):
+class AuthorArticleViewSet(CReadOnlyModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ListArticleSerializer
 
