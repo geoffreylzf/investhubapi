@@ -36,9 +36,9 @@ class CRUSDModel(models.Model):
     deleted_by = models.ForeignKey(User, default=None, null=True, on_delete=models.DO_NOTHING, db_constraint=False,
                                    related_name="%(class)s_delete_related",
                                    db_column='deleted_by')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(null=True, auto_now=True)
-    deleted_at = models.DateTimeField(null=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    deleted_at = models.DateTimeField(blank=True, null=True)
 
     objects = ValidManager()
     o = EntireManager()
@@ -70,16 +70,20 @@ class CRUSDModel(models.Model):
         if not set, set create user id
         """
         is_create = True
-        if self.id:
-            is_create = False
-            self.updated_by = self.get_user()
-        else:
-            self.created_by = self.get_user()
+        if not self.pure_save:
+            if self.id:
+                is_create = False
+                self.update_user = self.get_user()
+                self.update_date = datetime.now()
+            else:
+                self.create_user = self.get_user()
+                self.create_date = datetime.now()
         super().save(*args, **kwargs)
-        if is_create:
-            create_audit_trail(self, "CREATE")
-        else:
-            create_audit_trail(self, "UPDATE")
+        if not self.pure_save:
+            if is_create:
+                create_audit_trail(self, "CREATE")
+            else:
+                create_audit_trail(self, "UPDATE")
 
     def create(self, **data):
         for attr, value in data.items():

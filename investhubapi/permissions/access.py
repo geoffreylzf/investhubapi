@@ -7,7 +7,7 @@ DELETE_METHODS = ['DELETE']
 
 PUBLIC_START_ROUTES = [
     'api/acc/banks/',
-    'api/topic/',
+    'api/topics/',
     'api/stock/counters/',
     'api/articles/',
     'api/authors/',

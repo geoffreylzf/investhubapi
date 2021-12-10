@@ -7,12 +7,9 @@ from investhubapi.utils.model import CRUSDModel
 
 class ArticleView(CRUSDModel):
     article = models.ForeignKey(Article, on_delete=models.DO_NOTHING, db_constraint=False, related_name="views", )
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, db_constraint=False,related_name="%(class)s_related",
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, db_constraint=False, related_name="%(class)s_related",
                              blank=True, null=True)
     ip_address = models.GenericIPAddressField()
-    view_datetime = models.DateTimeField()
-
-    reference_no = models.CharField(max_length=100)
 
     class Meta:
         db_table = 'article_view'

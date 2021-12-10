@@ -9,6 +9,7 @@ class Article(CRUSDModel):
     article_title = models.CharField(max_length=300)
 
     is_publish = models.BooleanField(default=False)
+    view_count = models.IntegerField(default=0)
 
     class Meta:
         db_table = 'article'

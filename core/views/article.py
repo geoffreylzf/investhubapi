@@ -1,7 +1,11 @@
+from django.db import transaction
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from core.models.article import Article
+from core.models.article_view import ArticleView
 from core.serializers.article import ListArticleSerializer, ArticleSerializer
+from investhubapi.permissions.current_user import get_current_ip
 from investhubapi.utils.viewset import CReadOnlyModelViewSet
 
 
@@ -40,3 +44,21 @@ class ArticleViewSet(CReadOnlyModelViewSet):
                     p['article_img_path'] = None
 
         return Response(json)
+
+    @transaction.atomic
+    @action(detail=True, methods=['post'], url_path="view")
+    def view(self, request, pk):
+        v = ArticleView()
+
+        user = request.user
+        if not user.is_anonymous:
+            v.user = user
+        v.ip_address = get_current_ip()
+        v.save()
+
+        art = self.get_object()
+        art.pure_save = True
+        art.view_count += 1
+        art.save()
+
+        return Response()
