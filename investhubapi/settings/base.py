@@ -145,7 +145,6 @@ REST_FRAMEWORK = {
         'investhubapi.authentication.auth.CustomJWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
         'investhubapi.permissions.current_user.CurrentUserPermission',
         'investhubapi.permissions.access.AccessPermission'
     ],

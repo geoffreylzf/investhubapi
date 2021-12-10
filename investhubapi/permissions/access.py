@@ -13,7 +13,11 @@ PUBLIC_START_ROUTES = [
     'api/authors/',
 ]
 
-AUTH_ROUTES = [
+OPTIONAL_AUTH_ROUTES = [
+    'api/articles/<pk>/view/$',
+]
+
+REQUIRE_AUTH_ROUTES = [
     'api/articles/<article_id>/comments/$',
     'api/articles/<article_id>/comments/<pk>/$',
     'api/articles/<article_id>/comments/<comment_id>/replies/$',
@@ -28,10 +32,7 @@ class AccessPermission(permissions.BasePermission):
         method = request.method
         params = request.query_params
 
-        # print(route)
-
-        # if user.is_superuser:
-        #     return True
+        print(route)
 
         if route.startswith("api/auth/"):
             return True
@@ -39,9 +40,10 @@ class AccessPermission(permissions.BasePermission):
         if is_start_with_public_routes(route) and method in RETRIEVE_METHODS:
             return True
 
-        if route in AUTH_ROUTES \
-                and method in CREATE_METHODS + UPDATE_METHODS \
-                and not user.is_anonymous:
+        if route in OPTIONAL_AUTH_ROUTES:
+            return True
+
+        if route in REQUIRE_AUTH_ROUTES and not user.is_anonymous:
             return True
 
         if route.startswith("api/user/") and not user.is_anonymous:

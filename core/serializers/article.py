@@ -84,6 +84,7 @@ class ListArticleSerializer(CModelSerializer):
                   'topics',
                   'stock_counters',
                   'comment_count',
+                  'view_count',
                   'created_at',
                   'updated_at',)
 

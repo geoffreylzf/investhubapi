@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import transaction
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -48,17 +50,13 @@ class ArticleViewSet(CReadOnlyModelViewSet):
     @transaction.atomic
     @action(detail=True, methods=['post'], url_path="view")
     def view(self, request, pk):
-        v = ArticleView()
-
-        user = request.user
-        if not user.is_anonymous:
-            v.user = user
-        v.ip_address = get_current_ip()
-        v.save()
-
         art = self.get_object()
-        art.pure_save = True
-        art.view_count += 1
-        art.save()
+        art.increase_view_count()
+
+        ArticleView.objects.create_view_count(
+            article=art,
+            ip_address=get_current_ip(),
+            user=request.user
+        )
 
         return Response()

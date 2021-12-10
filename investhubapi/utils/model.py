@@ -27,7 +27,7 @@ class ReadOnlyModel(models.Model):
 
 class CRUSDModel(models.Model):
     # Create, Retrieve, Update, Soft Delete
-    created_by = models.ForeignKey(User, default=None, on_delete=models.DO_NOTHING, db_constraint=False,
+    created_by = models.ForeignKey(User, default=None, null=True, on_delete=models.DO_NOTHING, db_constraint=False,
                                    related_name="%(class)s_create_related",
                                    db_column='created_by')
     updated_by = models.ForeignKey(User, default=None, null=True, on_delete=models.DO_NOTHING, db_constraint=False,
@@ -73,11 +73,11 @@ class CRUSDModel(models.Model):
         if not self.pure_save:
             if self.id:
                 is_create = False
-                self.update_user = self.get_user()
-                self.update_date = datetime.now()
+                self.updated_by = self.get_user()
+                self.updated_at = datetime.now()
             else:
-                self.create_user = self.get_user()
-                self.create_date = datetime.now()
+                self.created_by = self.get_user()
+                self.created_at = datetime.now()
         super().save(*args, **kwargs)
         if not self.pure_save:
             if is_create:

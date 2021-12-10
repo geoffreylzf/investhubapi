@@ -14,3 +14,8 @@ class Article(CRUSDModel):
     class Meta:
         db_table = 'article'
         ordering = ['id']
+
+    def increase_view_count(self):
+        self.pure_save = True
+        self.view_count += 1
+        self.save()
