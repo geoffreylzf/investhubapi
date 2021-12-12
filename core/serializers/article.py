@@ -1,9 +1,11 @@
 from rest_framework import serializers
 
+from core.models import Author
 from core.models.article import Article
 from core.models.article_paragraph import ArticleParagraph
 from core.models.article_stock import ArticleStockCounter
 from core.models.article_topic import ArticleTopic
+from core.models.author_follower import AuthorFollower
 from investhubapi.utils.serializer import CModelSerializer
 
 
@@ -35,13 +37,41 @@ class ArticleParagraphSerializer(CModelSerializer):
                   'is_supporter_view_only',)
 
 
-class ArticleSerializer(CModelSerializer):
-    user = serializers.ReadOnlyField(source="author.user.id", default=None)
-    author = serializers.ReadOnlyField(source="author.id", default=None)
-    author_first_name = serializers.ReadOnlyField(source="author.user.first_name", default=None)
-    author_img_path = serializers.ImageField(source="author.user.user_img.path", default=None, read_only=True)
-    author_bio = serializers.ReadOnlyField(source="author.bio", default=None)
+class ArticleAuthorSerializer(CModelSerializer):
+    user = serializers.ReadOnlyField(source="user.id", default=None)
+    first_name = serializers.ReadOnlyField(source="user.first_name", default=None)
+    img_path = serializers.ImageField(source="user.user_img.path", default=None, read_only=True)
+    is_following = serializers.SerializerMethodField()
 
+    class Meta:
+        model = Author
+        fields = ('id',
+                  'bio',
+                  'user',
+                  'first_name',
+                  'img_path',
+                  'is_following',)
+
+    def get_is_following(self, obj):
+        """
+        Check is current user if following this author
+        return false if no auth
+        """
+        user = None
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+
+        if user and not user.is_anonymous:
+            cnt = AuthorFollower.objects.filter(author=obj, user=user).count()
+            if cnt > 0:
+                return True
+
+        return False
+
+
+class ArticleSerializer(CModelSerializer):
+    author = ArticleAuthorSerializer()
     topics = ArticleTopicSerializer(many=True)
     stock_counters = ArticleStockCounterSerializer(many=True)
     paragraphs = ArticleParagraphSerializer(many=True, )
@@ -51,12 +81,8 @@ class ArticleSerializer(CModelSerializer):
     class Meta:
         model = Article
         fields = ('id',
-                  'user',
-                  'article_title',
                   'author',
-                  'author_first_name',
-                  'author_img_path',
-                  'author_bio',
+                  'article_title',
                   'paragraphs',
                   'topics',
                   'stock_counters',
@@ -72,8 +98,6 @@ class ListArticleSerializer(CModelSerializer):
     stock_counters = ArticleStockCounterSerializer(many=True)
 
     comment_count = serializers.SerializerMethodField()
-
-    # TODO view_count
 
     class Meta:
         model = Article

@@ -3,22 +3,28 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from core.serializers.user.author import UserAuthorSerializer
-from core.serializers.user.user import UserSerializer
+from core.serializers.user.user import UserProfileSerializer, UserProfileDataSerializer
 
 
 @api_view(['GET', 'PUT'])
 def profile(request):
     if request.method == 'GET':
-        serializer = UserSerializer(request.user)
+        serializer = UserProfileSerializer(request.user)
         data = serializer.data
         if data['user_img_path']:
             data['user_img_path'] = request.build_absolute_uri(data['user_img_path'])
         return Response({"profile": data})
     elif request.method == 'PUT':
-        serializer = UserSerializer(request.user, data=request.data)
+        serializer = UserProfileSerializer(request.user, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({"profile": serializer.data})
+
+
+@api_view(['GET'])
+def data_(request):
+    serializer = UserProfileDataSerializer(request.user)
+    return Response(serializer.data)
 
 
 @api_view(['POST'])

@@ -22,6 +22,9 @@ REQUIRE_AUTH_ROUTES = [
     'api/articles/<article_id>/comments/<pk>/$',
     'api/articles/<article_id>/comments/<comment_id>/replies/$',
     'api/articles/<article_id>/comments/<comment_id>/replies/<pk>/$',
+
+    'api/authors/<pk>/follow/$',
+    'api/authors/<pk>/unfollow/$',
 ]
 
 

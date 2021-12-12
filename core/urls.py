@@ -31,6 +31,7 @@ router.register(r'user/profile/imgs', UserImgPathViewSet)
 
 urlpatterns = [
     path('user/profile/', user.profile),
+    path('user/profile/data/', user.data_),
     path('user/profile/author-registration/', user.author_registration),
     path('user/profile/author/', user.author),
 

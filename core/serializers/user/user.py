@@ -3,7 +3,7 @@ from rest_framework import serializers
 from core.models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
     email = serializers.ReadOnlyField()
     date_joined = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     is_active = serializers.ReadOnlyField()
@@ -35,3 +35,14 @@ class UserSerializer(serializers.ModelSerializer):
     #         validated_data.pop('password', None)
     #
     #     return super().update(instance, validated_data)
+
+
+class UserProfileDataSerializer(serializers.ModelSerializer):
+    following_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('following_count',)
+
+    def get_following_count(self, obj):
+        return obj.followings.count()
