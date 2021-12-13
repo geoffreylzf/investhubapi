@@ -76,8 +76,6 @@ class ArticleSerializer(CModelSerializer):
     stock_counters = ArticleStockCounterSerializer(many=True)
     paragraphs = ArticleParagraphSerializer(many=True, )
 
-    # TODO view_count
-
     class Meta:
         model = Article
         fields = ('id',
