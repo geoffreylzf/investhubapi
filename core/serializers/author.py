@@ -13,6 +13,7 @@ class AuthorSerializer(CModelSerializer):
     article_count = serializers.SerializerMethodField()
     follower_count = serializers.SerializerMethodField()
     is_following = serializers.SerializerMethodField()
+    current_user_support = serializers.SerializerMethodField()
 
     class Meta:
         model = Author
@@ -24,7 +25,8 @@ class AuthorSerializer(CModelSerializer):
                   'created_at',
                   'article_count',
                   'follower_count',
-                  'is_following',)
+                  'is_following',
+                  'current_user_support',)
 
     def get_article_count(self, obj):
         return obj.articles.count()
@@ -33,18 +35,17 @@ class AuthorSerializer(CModelSerializer):
         return obj.followers.count()
 
     def get_is_following(self, obj):
-        """
-        Check is current user if following this author
-        return false if no auth
-        """
         user = None
         request = self.context.get("request")
         if request and hasattr(request, "user"):
             user = request.user
 
-        if user and not user.is_anonymous:
-            cnt = AuthorFollower.objects.filter(author=obj, user=user).count()
-            if cnt > 0:
-                return True
+        return obj.check_is_follower(user)
 
-        return False
+    def get_current_user_support(self, obj):
+        user = None
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+
+        return obj.get_current_user_support_data(user)

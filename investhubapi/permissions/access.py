@@ -18,6 +18,8 @@ OPTIONAL_AUTH_ROUTES = [
 ]
 
 REQUIRE_AUTH_ROUTES = [
+    'api/articles/<pk>/sponsor/$',
+
     'api/articles/<article_id>/comments/$',
     'api/articles/<article_id>/comments/<pk>/$',
     'api/articles/<article_id>/comments/<comment_id>/replies/$',

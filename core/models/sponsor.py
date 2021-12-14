@@ -7,6 +7,7 @@ from investhubapi.utils.model import CRUSDModel
 
 class Sponsor(CRUSDModel):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING, db_constraint=False, related_name="sponsors", )
+    sponsor_date = models.DateField()
     article = models.ForeignKey(Article, on_delete=models.DO_NOTHING, db_constraint=False, related_name="sponsors", )
     commission_pct = models.IntegerField(default=70)
     amt = models.DecimalField(max_digits=15, decimal_places=2)

@@ -5,7 +5,6 @@ from core.models.article import Article
 from core.models.article_paragraph import ArticleParagraph
 from core.models.article_stock import ArticleStockCounter
 from core.models.article_topic import ArticleTopic
-from core.models.author_follower import AuthorFollower
 from investhubapi.utils.serializer import CModelSerializer
 
 
@@ -42,6 +41,7 @@ class ArticleAuthorSerializer(CModelSerializer):
     first_name = serializers.ReadOnlyField(source="user.first_name", default=None)
     img_path = serializers.ImageField(source="user.user_img.path", default=None, read_only=True)
     is_following = serializers.SerializerMethodField()
+    current_user_support = serializers.SerializerMethodField()
 
     class Meta:
         model = Author
@@ -50,31 +50,32 @@ class ArticleAuthorSerializer(CModelSerializer):
                   'user',
                   'first_name',
                   'img_path',
-                  'is_following',)
+                  'is_following',
+                  'current_user_support',)
 
     def get_is_following(self, obj):
-        """
-        Check is current user if following this author
-        return false if no auth
-        """
         user = None
         request = self.context.get("request")
         if request and hasattr(request, "user"):
             user = request.user
 
-        if user and not user.is_anonymous:
-            cnt = AuthorFollower.objects.filter(author=obj, user=user).count()
-            if cnt > 0:
-                return True
+        return obj.check_is_follower(user)
 
-        return False
+    def get_current_user_support(self, obj):
+        user = None
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+
+        return obj.get_current_user_support_data(user)
 
 
 class ArticleSerializer(CModelSerializer):
     author = ArticleAuthorSerializer()
     topics = ArticleTopicSerializer(many=True)
     stock_counters = ArticleStockCounterSerializer(many=True)
-    paragraphs = ArticleParagraphSerializer(many=True, )
+    paragraphs = ArticleParagraphSerializer(many=True)
+    current_user_sponsor = serializers.SerializerMethodField()
 
     class Meta:
         model = Article
@@ -84,8 +85,18 @@ class ArticleSerializer(CModelSerializer):
                   'paragraphs',
                   'topics',
                   'stock_counters',
+                  'view_count',
+                  'current_user_sponsor',
                   'created_at',
                   'updated_at',)
+
+    def get_current_user_sponsor(self, obj):
+        user = None
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+
+        return obj.get_current_user_sponsor_data(user)
 
 
 class ListArticleSerializer(CModelSerializer):
