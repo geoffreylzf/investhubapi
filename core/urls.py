@@ -10,7 +10,8 @@ from core.views.topic import TopicViewSet
 from core.views.user import user
 from core.views.user.article import UserArticleViewSet
 from core.views.user.article_img_path import UserArticleImgViewSet
-from core.views.user.following import FollowingViewSet
+from core.views.user.following import UserFollowingViewSet
+from core.views.user.sponsor import UserSponsorViewSet
 from core.views.user.user_img_path import UserImgPathViewSet
 
 router = DefaultRouter()
@@ -29,7 +30,8 @@ router.register(r'authors/(?P<author_id>[0-9]+)/articles', AuthorArticleViewSet)
 router.register(r'user/profile/author/article-imgs', UserArticleImgViewSet)
 router.register(r'user/profile/author/articles', UserArticleViewSet)
 router.register(r'user/profile/imgs', UserImgPathViewSet)
-router.register(r'user/profile/followings', FollowingViewSet)
+router.register(r'user/profile/followings', UserFollowingViewSet)
+router.register(r'user/profile/sponsors', UserSponsorViewSet)
 
 urlpatterns = [
     path('user/profile/', user.profile),

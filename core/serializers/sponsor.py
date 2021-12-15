@@ -2,7 +2,7 @@ from core.models.sponsor import Sponsor
 from investhubapi.utils.serializer import CModelSerializer
 
 
-class TestSponsorSerializer(CModelSerializer):
+class SponsorPaymentSerializer(CModelSerializer):
     class Meta:
         model = Sponsor
         fields = ('article',

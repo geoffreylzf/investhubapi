@@ -2,13 +2,13 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from core.models import Author
-from core.serializers.user.following import FollowingSerializer
+from core.serializers.user.following import UserFollowingSerializer
 from investhubapi.utils.viewset import CReadOnlyModelViewSet
 
 
-class FollowingViewSet(CReadOnlyModelViewSet):
+class UserFollowingViewSet(CReadOnlyModelViewSet):
     queryset = Author.objects.all()
-    serializer_class = FollowingSerializer
+    serializer_class = UserFollowingSerializer
 
     filter_field_contain_list = [
         ("first_name", "user__first_name")

@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from core.models.article import Article
 from core.models.article_view import ArticleView
 from core.serializers.article import ListArticleSerializer, ArticleSerializer
-from core.serializers.sponsor import TestSponsorSerializer
+from core.serializers.sponsor import SponsorPaymentSerializer
 from investhubapi.permissions.current_user import get_current_ip
 from investhubapi.utils.viewset import CReadOnlyModelViewSet
 
@@ -68,7 +68,7 @@ class ArticleViewSet(CReadOnlyModelViewSet):
     @transaction.atomic
     @action(detail=True, methods=['post'], url_path="sponsor")
     def sponsor(self, request, pk):
-        serializer = TestSponsorSerializer(data=request.data)
+        serializer = SponsorPaymentSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         article = serializer.validated_data.get('article')

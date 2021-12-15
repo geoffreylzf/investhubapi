@@ -4,7 +4,7 @@ from core.models import Author
 from investhubapi.utils.serializer import CModelSerializer
 
 
-class FollowingSerializer(CModelSerializer):
+class UserFollowingSerializer(CModelSerializer):
     first_name = serializers.ReadOnlyField(source="user.first_name", default=None)
     last_name = serializers.ReadOnlyField(source="user.last_name", default=None)
     img_path = serializers.ImageField(source="user.user_img.path", default=None, read_only=True)

@@ -2,13 +2,13 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from core.models.article_img import ArticleImg
-from core.serializers.user.article_img_path import ArticleImgSerializer
+from core.serializers.user.article_img_path import UserArticleImgSerializer
 from investhubapi.utils.viewset import CModelViewSet
 
 
 class UserArticleImgViewSet(CModelViewSet):
     queryset = ArticleImg.objects.all()
-    serializer_class = ArticleImgSerializer
+    serializer_class = UserArticleImgSerializer
 
     def get_queryset(self):
         user = self.request.user
