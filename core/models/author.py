@@ -1,9 +1,11 @@
 from datetime import date
 
 from django.db import models
+from django.db.models import F, Sum
 
 from core.models import User
 from core.models.acc_bank import AccBank
+from core.models.flow_status import Status
 from investhubapi.utils.model import CRUSDModel
 
 
@@ -55,4 +57,34 @@ class Author(CRUSDModel):
             "is_support": is_support,
             "last_date": last_date,
             "remaining_days": remaining_days
+        }
+
+    def get_fund_data(self):
+        from core.models.sponsor import Sponsor
+        from core.models.author_withdraw import AuthorWithdraw
+
+        fund = Sponsor.objects.filter(article__author=self) \
+            .aggregate(fund=Sum(F('amt') * F('commission_pct') / 100)) \
+            .get('fund', 0)
+
+        complete_withdraw = 0
+        pending_withdraw = 0
+
+        withdraw_qs = AuthorWithdraw.objects \
+            .filter(author=self) \
+            .values('flow_status_id') \
+            .annotate(ttl_amt=Sum('amt'))
+
+        for wd in withdraw_qs:
+            fs_id = wd['flow_status_id']
+            amt = wd['ttl_amt']
+            if fs_id in [Status.DRAFT, Status.CONFIRM, Status.PROCEED]:
+                pending_withdraw += amt
+            elif fs_id in [Status.COMPLETE]:
+                complete_withdraw += amt
+
+        return {
+            "fund": fund,
+            "complete_withdraw": complete_withdraw,
+            "pending_withdraw": pending_withdraw
         }

@@ -18,7 +18,7 @@ class UserImgPathViewSet(CModelViewSet):
         return super().mixin_get_queryset(qs)
 
     def update(self, request, *args, **kwargs):
-        return Response(status.HTTP_403_FORBIDDEN)
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     def destroy(self, request, *args, **kwargs):
-        return Response(status.HTTP_403_FORBIDDEN)
+        return Response(status=status.HTTP_403_FORBIDDEN)

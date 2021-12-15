@@ -13,6 +13,7 @@ from core.views.user.article_img_path import UserArticleImgViewSet
 from core.views.user.following import UserFollowingViewSet
 from core.views.user.sponsor import UserSponsorViewSet
 from core.views.user.user_img_path import UserImgPathViewSet
+from core.views.user.withdraw import UserWithdrawViewSet
 
 router = DefaultRouter()
 router.register(r'acc/banks', AccBankViewSet)
@@ -32,12 +33,14 @@ router.register(r'user/profile/author/articles', UserArticleViewSet)
 router.register(r'user/profile/imgs', UserImgPathViewSet)
 router.register(r'user/profile/followings', UserFollowingViewSet)
 router.register(r'user/profile/sponsors', UserSponsorViewSet)
+router.register(r'user/profile/withdraws', UserWithdrawViewSet)
 
 urlpatterns = [
     path('user/profile/', user.profile),
     path('user/profile/data/', user.data_),
     path('user/profile/author-registration/', user.author_registration),
     path('user/profile/author/', user.author),
+    path('user/profile/author/fund/', user.author_fund),
 
     path('', include(router.urls)),
 ]

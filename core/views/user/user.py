@@ -1,7 +1,10 @@
+from django.db.models import Sum, F
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from core.models.author_withdraw import AuthorWithdraw
+from core.models.sponsor import Sponsor
 from core.serializers.user.author import UserAuthorSerializer
 from core.serializers.user.user import UserProfileSerializer, UserProfileDataSerializer
 
@@ -50,3 +53,13 @@ def author(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+
+@api_view(['GET'])
+def author_fund(request):
+    fund_data = request.user.author.get_fund_data()
+
+    return Response({
+        'available_fund': fund_data['fund'] - fund_data['complete_withdraw'] - fund_data['pending_withdraw'],
+        'pending_withdraw': fund_data['pending_withdraw'],
+    })
