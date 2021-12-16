@@ -10,29 +10,29 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from core.models import User
 
 
-@api_view(['POST'])
-def change_password(request):
-    data = request.data
-    old_password = data.get('old_password')
-
-    user = get_object_or_404(User, pk=request.user.id)
-
-    if not user.check_password(old_password):
-        return Response("Old password is invalid", status.HTTP_406_NOT_ACCEPTABLE)
-    else:
-        new_password = data.get('new_password')
-        retype_password = data.get('retype_password')
-        if new_password is None or retype_password is None:
-            return Response("New password and retype password is required", status.HTTP_406_NOT_ACCEPTABLE)
-        if new_password != retype_password:
-            return Response("New password and retype password must be same", status.HTTP_406_NOT_ACCEPTABLE)
-        if old_password == new_password:
-            return Response("New password cannot same as old password", status.HTTP_406_NOT_ACCEPTABLE)
-
-        user.set_password(new_password)
-        user.save()
-
-    return Response("Password changed")
+# @api_view(['POST'])
+# def change_password(request):
+#     data = request.data
+#     old_password = data.get('old_password')
+#
+#     user = get_object_or_404(User, pk=request.user.id)
+#
+#     if not user.check_password(old_password):
+#         return Response("Old password is invalid", status.HTTP_406_NOT_ACCEPTABLE)
+#     else:
+#         new_password = data.get('new_password')
+#         retype_password = data.get('retype_password')
+#         if new_password is None or retype_password is None:
+#             return Response("New password and retype password is required", status.HTTP_406_NOT_ACCEPTABLE)
+#         if new_password != retype_password:
+#             return Response("New password and retype password must be same", status.HTTP_406_NOT_ACCEPTABLE)
+#         if old_password == new_password:
+#             return Response("New password cannot same as old password", status.HTTP_406_NOT_ACCEPTABLE)
+#
+#         user.set_password(new_password)
+#         user.save()
+#
+#     return Response("Password changed")
 
 
 @api_view(['POST'])

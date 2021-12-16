@@ -1,6 +1,7 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
+from core.views import home
 from core.views.acc_bank import AccBankViewSet
 from core.views.article import ArticleViewSet
 from core.views.author import AuthorArticleViewSet, AuthorViewSet
@@ -41,6 +42,10 @@ urlpatterns = [
     path('user/profile/author-registration/', user.author_registration),
     path('user/profile/author/', user.author),
     path('user/profile/author/fund/', user.author_fund),
+
+    path('home/newest-articles/', home.newest_articles),
+    path('home/newest-authors/', home.newest_authors),
+    path('home/month-top-articles/', home.trend_articles),
 
     path('', include(router.urls)),
 ]

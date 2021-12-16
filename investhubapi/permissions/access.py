@@ -48,10 +48,17 @@ class AccessPermission(permissions.BasePermission):
         if route in OPTIONAL_AUTH_ROUTES:
             return True
 
-        if route in REQUIRE_AUTH_ROUTES and not user.is_anonymous:
+        if route in REQUIRE_AUTH_ROUTES \
+                and not user.is_anonymous:
             return True
 
-        if route.startswith("api/user/") and not user.is_anonymous:
+        if route.startswith("api/user/profile/author/") \
+                and not user.is_anonymous \
+                and not user.is_author:
+            return True
+
+        if route.startswith("api/user/") \
+                and not user.is_anonymous:
             return True
 
         return False

@@ -65,7 +65,7 @@ class Author(CRUSDModel):
 
         fund = Sponsor.objects.filter(article__author=self) \
             .aggregate(fund=Sum(F('amt') * F('commission_pct') / 100)) \
-            .get('fund', 0)
+            .get('fund', 0) or 0
 
         complete_withdraw = 0
         pending_withdraw = 0
