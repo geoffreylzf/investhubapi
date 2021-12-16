@@ -30,10 +30,10 @@ router.register(r'authors/(?P<author_id>[0-9]+)/articles', AuthorArticleViewSet)
 
 router.register(r'user/profile/author/article-imgs', UserArticleImgViewSet)
 router.register(r'user/profile/author/articles', UserArticleViewSet)
+router.register(r'user/profile/author/withdraws', UserWithdrawViewSet)
 router.register(r'user/profile/imgs', UserImgPathViewSet)
 router.register(r'user/profile/followings', UserFollowingViewSet)
 router.register(r'user/profile/sponsors', UserSponsorViewSet)
-router.register(r'user/profile/withdraws', UserWithdrawViewSet)
 
 urlpatterns = [
     path('user/profile/', user.profile),

@@ -86,5 +86,6 @@ class Author(CRUSDModel):
         return {
             "fund": fund,
             "complete_withdraw": complete_withdraw,
-            "pending_withdraw": pending_withdraw
+            "pending_withdraw": pending_withdraw,
+            "available_fund": fund - complete_withdraw - pending_withdraw,
         }

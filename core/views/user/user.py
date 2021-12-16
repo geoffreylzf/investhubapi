@@ -60,6 +60,6 @@ def author_fund(request):
     fund_data = request.user.author.get_fund_data()
 
     return Response({
-        'available_fund': fund_data['fund'] - fund_data['complete_withdraw'] - fund_data['pending_withdraw'],
+        'available_fund': fund_data['available_fund'],
         'pending_withdraw': fund_data['pending_withdraw'],
     })

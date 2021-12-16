@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from core.models.article import Article
@@ -33,16 +34,13 @@ class UserArticleViewSet(CModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user.author)
 
-    def update(self, request, *args, **kwargs):
-        user = self.request.user
-        if self.get_object().author != user.author:
-            return Response('You are not the owner of this article', status=status.HTTP_401_UNAUTHORIZED)
-        return super().update(request, *args, **kwargs)
+    @action(detail=True, methods=['post'], url_path="statistics")
+    def statistics(self, request, pk):
+        article = self.get_object()
 
-    def destroy(self, request, *args, **kwargs):
-        user = self.request.user
-        if self.get_object().author != user.author:
-            return Response('You are not the owner of this article', status=status.HTTP_401_UNAUTHORIZED)
-        return super().destroy(request, *args, **kwargs)
-
-
+        return Response({
+            "view_count": 0,
+            "comment_count": 0,
+            "sponsor_count": 0,
+            "sponsor_amt": 0,
+        })
