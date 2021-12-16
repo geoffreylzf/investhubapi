@@ -1,8 +1,10 @@
+from django.db.models import F, Sum
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from core.models.article import Article
+from core.models.sponsor import Sponsor
 from core.serializers.user.article import UserArticleSerializer, ListUserArticleSerializer
 from investhubapi.utils.viewset import CModelViewSet
 
@@ -34,13 +36,17 @@ class UserArticleViewSet(CModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user.author)
 
-    @action(detail=True, methods=['post'], url_path="statistics")
+    @action(detail=True, methods=['get'], url_path="statistics")
     def statistics(self, request, pk):
         article = self.get_object()
 
+        amt = Sponsor.objects.filter(article=article) \
+            .aggregate(fund=Sum(F('amt') * F('commission_pct') / 100)) \
+            .get('fund', 0)
+
         return Response({
-            "view_count": 0,
-            "comment_count": 0,
-            "sponsor_count": 0,
-            "sponsor_amt": 0,
+            "view_count": article.view_count,
+            "comment_count": article.comments.count(),
+            "sponsor_count": article.sponsors.count(),
+            "sponsor_amt": amt,
         })
