@@ -11,6 +11,8 @@ PUBLIC_START_ROUTES = [
     'api/stock/counters/',
     'api/articles/',
     'api/authors/',
+
+    'api/home/',
 ]
 
 OPTIONAL_AUTH_ROUTES = [

@@ -45,7 +45,7 @@ urlpatterns = [
 
     path('home/newest-articles/', home.newest_articles),
     path('home/newest-authors/', home.newest_authors),
-    path('home/month-top-articles/', home.trend_articles),
+    path('home/trend-articles/', home.trend_articles),
 
     path('', include(router.urls)),
 ]
