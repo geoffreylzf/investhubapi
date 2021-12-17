@@ -9,6 +9,8 @@ from core.models.article import Article
 from core.models.article_view import ArticleView
 from core.serializers.article import ListArticleSerializer
 from core.serializers.author import AuthorSerializer
+from core.views.article import ArticleViewSet
+from investhubapi.utils.viewset import CReadOnlyModelViewSet
 
 
 @api_view(['GET'])
@@ -16,10 +18,14 @@ def newest_articles(request):
     qs = Article.objects \
              .filter(is_publish=True, paragraphs__isnull=False) \
              .order_by('-created_at')[:10]
-    art_list = ListArticleSerializer(qs, many=True).data
-    for art in art_list:
-        if art['author_img_path']:
-            art['author_img_path'] = request.build_absolute_uri(art['author_img_path'])
+
+    art_list = []
+    for a in qs:
+        art_list.append({
+            "id": a.id,
+            "title": a.article_title,
+            "author_first_name": a.author.user.first_name,
+        })
 
     return Response(art_list)
 
@@ -49,13 +55,30 @@ def trend_articles(request):
              .annotate(count=Count('id')) \
              .order_by('-count')[:10]
 
-    data = []
+    art_list = []
     for o in qs:
-        data.append(Article.objects.get(id=o['article']))
-
-    art_list = ListArticleSerializer(data, many=True).data
-    for art in art_list:
-        if art['author_img_path']:
-            art['author_img_path'] = request.build_absolute_uri(art['author_img_path'])
+        a = Article.objects.get(id=o['article'])
+        art_list.append({
+            "id": a.id,
+            "title": a.article_title,
+            "view_count": o['count'],
+            "author_first_name": a.author.user.first_name,
+        })
 
     return Response(art_list)
+
+
+class TimelineArticleViewSet(ArticleViewSet):
+    queryset = Article.objects.filter(is_publish=True).order_by('-created_at').all()
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_anonymous:
+            return super().get_queryset()
+
+        qs = Article.objects \
+            .filter(is_publish=True,
+                    author__in=user.followings.author) \
+            .distinct() \
+            .order_by('-created_at')
+        return super().mixin_get_queryset(qs)

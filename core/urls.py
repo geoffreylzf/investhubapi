@@ -6,6 +6,7 @@ from core.views.acc_bank import AccBankViewSet
 from core.views.article import ArticleViewSet
 from core.views.author import AuthorArticleViewSet, AuthorViewSet
 from core.views.comment import ArticleCommentViewSet, ArticleCommentReplyViewSet
+from core.views.home import TimelineArticleViewSet
 from core.views.stock_counter import StockCounterViewSet
 from core.views.topic import TopicViewSet
 from core.views.user import user
@@ -35,6 +36,8 @@ router.register(r'user/profile/author/withdraws', UserWithdrawViewSet)
 router.register(r'user/profile/imgs', UserImgPathViewSet)
 router.register(r'user/profile/followings', UserFollowingViewSet)
 router.register(r'user/profile/sponsors', UserSponsorViewSet)
+
+router.register(r'home/timeline', TimelineArticleViewSet)
 
 urlpatterns = [
     path('user/profile/', user.profile),

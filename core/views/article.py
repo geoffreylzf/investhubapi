@@ -21,6 +21,8 @@ class ArticleViewSet(CReadOnlyModelViewSet):
         ("author_first_name", "author__user__first_name")
     ]
 
+
+
     def get_serializer_class(self):
         if self.action == 'list':
             return ListArticleSerializer
