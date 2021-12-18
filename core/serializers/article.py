@@ -31,6 +31,7 @@ class ArticleParagraphSerializer(CModelSerializer):
         model = ArticleParagraph
         fields = ('order',
                   'type',
+                  'paragraph_title',
                   'content',
                   'article_img_path',
                   'is_supporter_view_only',)
@@ -87,6 +88,7 @@ class ArticleSerializer(CModelSerializer):
                   'stock_counters',
                   'view_count',
                   'current_user_sponsor',
+                  'publish_datetime',
                   'created_at',
                   'updated_at',)
 
@@ -118,6 +120,7 @@ class ListArticleSerializer(CModelSerializer):
                   'stock_counters',
                   'comment_count',
                   'view_count',
+                  'publish_datetime',
                   'created_at',
                   'updated_at',)
 

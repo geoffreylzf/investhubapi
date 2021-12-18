@@ -15,7 +15,8 @@ from core.views.article import ArticleViewSet
 def newest_articles(request):
     qs = Article.objects \
              .filter(is_publish=True, paragraphs__isnull=False) \
-             .order_by('-created_at')[:10]
+             .distinct() \
+             .order_by('-publish_datetime')[:10]
 
     art_list = []
     for a in qs:
@@ -23,6 +24,7 @@ def newest_articles(request):
             "id": a.id,
             "title": a.article_title,
             "author_first_name": a.author.user.first_name,
+            "publish_datetime": a.publish_datetime
         })
 
     return Response(art_list)
@@ -61,6 +63,7 @@ def trend_articles(request):
             "title": a.article_title,
             "view_count": o['count'],
             "author_first_name": a.author.user.first_name,
+            "publish_datetime": a.publish_datetime
         })
 
     return Response(art_list)

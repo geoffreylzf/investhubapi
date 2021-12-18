@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db.models import F, Sum
 from rest_framework import status
 from rest_framework.decorators import action
@@ -34,15 +36,31 @@ class UserArticleViewSet(CModelViewSet):
         return super().get_serializer_class()
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user.author)
+        data = serializer.validated_data
+        if len(data.get('paragraphs', [])) != 0 and data.get('is_publish', False):
+            serializer.save(author=self.request.user.author,
+                            publish_datetime=datetime.now())
+        else:
+            serializer.save(author=self.request.user.author)
+
+    def perform_update(self, serializer):
+        ins = self.get_object()
+        data = serializer.validated_data
+        if not ins.is_publish \
+                and ins.publish_datetime is None \
+                and data.get('is_publish', False):
+            # Save publish_datetime if article not publish before and update to publish now
+            serializer.save(publish_datetime=datetime.now())
+        else:
+            super().perform_update(serializer)
 
     @action(detail=True, methods=['get'], url_path="statistics")
     def statistics(self, request, pk):
         article = self.get_object()
 
         amt = Sponsor.objects.filter(article=article) \
-            .aggregate(fund=Sum(F('amt') * F('commission_pct') / 100)) \
-            .get('fund') or 0
+                  .aggregate(fund=Sum(F('amt') * F('commission_pct') / 100)) \
+                  .get('fund') or 0
 
         return Response({
             "view_count": article.view_count,

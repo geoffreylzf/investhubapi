@@ -40,6 +40,7 @@ class UserArticleParagraphSerializer(CModelSerializer):
         fields = ('id',
                   'order',
                   'type',
+                  'paragraph_title',
                   'content',
                   'article_img', 'article_img_path',
                   'is_supporter_view_only',)
@@ -58,6 +59,7 @@ class UserArticleSerializer(CModelSerializer):
                   'paragraphs',
                   'topics',
                   'stock_counters',
+                  'publish_datetime',
                   'created_at',
                   'updated_at',)
 
