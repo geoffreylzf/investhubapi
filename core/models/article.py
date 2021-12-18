@@ -11,6 +11,7 @@ class Article(CRUSDModel):
     article_title = models.CharField(max_length=300)
 
     is_publish = models.BooleanField(default=False)
+    publish_datetime = models.DateTimeField(null=True, blank=True)
     view_count = models.IntegerField(default=0)
 
     class Meta:

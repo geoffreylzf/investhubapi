@@ -7,10 +7,8 @@ from rest_framework.response import Response
 from core.models import Author
 from core.models.article import Article
 from core.models.article_view import ArticleView
-from core.serializers.article import ListArticleSerializer
 from core.serializers.author import AuthorSerializer
 from core.views.article import ArticleViewSet
-from investhubapi.utils.viewset import CReadOnlyModelViewSet
 
 
 @api_view(['GET'])
@@ -46,14 +44,14 @@ def newest_authors(request):
 
 @api_view(['GET'])
 def trend_articles(request):
-    last_15_days = datetime.today() - timedelta(days=15)
+    last_15_days = datetime.today() - timedelta(days=7)
 
     qs = ArticleView.objects \
              .values('article') \
              .filter(article__is_publish=True,
                      created_at__gte=last_15_days) \
              .annotate(count=Count('id')) \
-             .order_by('-count')[:10]
+             .order_by('-count')[:5]
 
     art_list = []
     for o in qs:
@@ -78,7 +76,7 @@ class TimelineArticleViewSet(ArticleViewSet):
 
         qs = Article.objects \
             .filter(is_publish=True,
-                    author__in=user.followings.author) \
+                    author__in=user.followings.all().values('author')) \
             .distinct() \
             .order_by('-created_at')
         return super().mixin_get_queryset(qs)

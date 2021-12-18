@@ -10,6 +10,7 @@ class ArticleParagraph(CRUSDModel):
     order = models.IntegerField(default=0)
 
     type = models.CharField(max_length=10)
+    paragraph_title = models.CharField(max_length=300, blank=True, null=True)
     content = models.TextField(blank=True, null=True)
     article_img = models.ForeignKey(ArticleImg, on_delete=models.DO_NOTHING, db_constraint=False, related_name="%(class)s_related",
                                     blank=True, null=True)

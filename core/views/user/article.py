@@ -42,7 +42,7 @@ class UserArticleViewSet(CModelViewSet):
 
         amt = Sponsor.objects.filter(article=article) \
             .aggregate(fund=Sum(F('amt') * F('commission_pct') / 100)) \
-            .get('fund', 0)
+            .get('fund') or 0
 
         return Response({
             "view_count": article.view_count,
