@@ -9,3 +9,4 @@ INSERT INTO `topic` (`id`,`created_at`,`updated_at`,`deleted_at`,`topic_name`,`c
 INSERT INTO `topic` (`id`,`created_at`,`updated_at`,`deleted_at`,`topic_name`,`created_by`,`deleted_by`,`updated_by`) VALUES (3,'2021-01-01 00:00:00.000000',NULL,NULL,'Crypto',1,NULL,NULL);
 INSERT INTO `topic` (`id`,`created_at`,`updated_at`,`deleted_at`,`topic_name`,`created_by`,`deleted_by`,`updated_by`) VALUES (4,'2021-01-01 00:00:00.000000',NULL,NULL,'Diary',1,NULL,NULL);
 INSERT INTO `topic` (`id`,`created_at`,`updated_at`,`deleted_at`,`topic_name`,`created_by`,`deleted_by`,`updated_by`) VALUES (5,'2021-01-01 00:00:00.000000',NULL,NULL,'Trend',1,NULL,NULL);
+INSERT INTO `topic` (`id`,`created_at`,`updated_at`,`deleted_at`,`topic_name`,`created_by`,`deleted_by`,`updated_by`) VALUES (6,'2021-01-01 00:00:00.000000',NULL,NULL,'Announcement',1,NULL,NULL);

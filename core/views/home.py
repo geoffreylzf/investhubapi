@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from django.db.models import Count
+from django.db.models import Count, Min
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -32,15 +32,24 @@ def newest_articles(request):
 
 @api_view(['GET'])
 def newest_authors(request):
-    qs = Author.objects \
+    qs = Article.objects \
              .distinct() \
-             .filter(articles__is_publish=True,
-                     articles__isnull=False, ) \
-             .order_by('-created_at')[:5]
-    aut_list = AuthorSerializer(qs, many=True).data
-    for aut in aut_list:
-        if aut['img_path']:
-            aut['img_path'] = request.build_absolute_uri(aut['img_path'])
+             .values('author') \
+             .filter(is_publish=True) \
+             .annotate(min_publish_datetime=Min('publish_datetime')) \
+             .order_by('-min_publish_datetime')[:5]
+
+    aut_list = []
+    for o in qs:
+        aut = Author.objects.get(id=o['author'])
+
+        aut_list.append({
+            "id": aut.id,
+            "first_name": aut.user.first_name,
+            "img_path": request.build_absolute_uri(aut.user.user_img.path.url),
+            "first_article_publish_datetime": o['min_publish_datetime'].strftime("%Y-%m-%d %H:%M:%S")
+        })
+
     return Response(aut_list)
 
 
