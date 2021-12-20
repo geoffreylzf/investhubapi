@@ -25,15 +25,11 @@ class ArticleStockCounterSerializer(CModelSerializer):
 
 
 class ArticleParagraphSerializer(CModelSerializer):
-    article_img_path = serializers.ImageField(source="article_img.path", default=None, read_only=True)
 
     class Meta:
         model = ArticleParagraph
         fields = ('order',
-                  'type',
-                  'paragraph_title',
                   'content',
-                  'article_img_path',
                   'is_supporter_view_only',)
 
 

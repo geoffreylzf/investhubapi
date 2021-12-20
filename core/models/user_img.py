@@ -8,7 +8,7 @@ from investhubapi.utils.model import CRUSDModel
 def image_directory_path(instance, filename):
     arr = filename.split(".")
     name = str(uuid.uuid4()) + "." + arr[-1]
-    return 'user/profile/{0}'.format(name)
+    return 'users/{0}/profile/{1}'.format(instance.created_by.id, name)
 
 
 class UserImg(CRUSDModel):

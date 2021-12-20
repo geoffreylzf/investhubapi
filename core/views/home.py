@@ -42,12 +42,16 @@ def newest_authors(request):
     aut_list = []
     for o in qs:
         aut = Author.objects.get(id=o['author'])
+        img_path = request.build_absolute_uri(aut.user.user_img.path.url)
+        first_article_publish_datetime = o['min_publish_datetime']
+        if o['min_publish_datetime']:
+            first_article_publish_datetime = o['min_publish_datetime'].strftime("%Y-%m-%d %H:%M:%S")
 
         aut_list.append({
             "id": aut.id,
             "first_name": aut.user.first_name,
-            "img_path": request.build_absolute_uri(aut.user.user_img.path.url),
-            "first_article_publish_datetime": o['min_publish_datetime'].strftime("%Y-%m-%d %H:%M:%S")
+            "img_path": img_path,
+            "first_article_publish_datetime": first_article_publish_datetime
         })
 
     return Response(aut_list)

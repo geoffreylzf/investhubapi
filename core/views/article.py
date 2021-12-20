@@ -47,7 +47,6 @@ class ArticleViewSet(CReadOnlyModelViewSet):
             for p in json['paragraphs']:
                 if p['is_supporter_view_only']:
                     p['content'] = None
-                    p['article_img_path'] = None
 
         return Response(json)
 

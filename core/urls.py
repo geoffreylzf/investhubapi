@@ -11,7 +11,7 @@ from core.views.stock_counter import StockCounterViewSet
 from core.views.topic import TopicViewSet
 from core.views.user import user
 from core.views.user.article import UserArticleViewSet
-from core.views.user.article_img_path import UserArticleImgViewSet
+from core.views.user.article_img import UserArticleImgViewSet
 from core.views.user.following import UserFollowingViewSet
 from core.views.user.sponsor import UserSponsorViewSet
 from core.views.user.user_img_path import UserImgPathViewSet

@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from core.models import Author
-from core.models.author_follower import AuthorFollower
 from investhubapi.utils.serializer import CModelSerializer
 
 
