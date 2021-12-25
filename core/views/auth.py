@@ -3,8 +3,8 @@ import json
 import requests
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from core.models import User
@@ -33,6 +33,28 @@ from core.models import User
 #         user.save()
 #
 #     return Response("Password changed")
+
+@api_view(['POST'])
+def login_local(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+
+    if email is None or password is None:
+        return Response("Please provide email and password", status.HTTP_406_NOT_ACCEPTABLE)
+
+    try:
+        user = User.objects.get(email=email, is_active=True,
+                                provider_type__isnull=True, provider_id__isnull=True)
+        if not user.check_password(password):
+            raise User.DoesNotExist
+    except User.DoesNotExist:
+        raise AuthenticationFailed('No active account found with the given credentials')
+
+    refresh = RefreshToken.for_user(user)
+    return Response({
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    })
 
 
 @api_view(['POST'])

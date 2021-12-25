@@ -30,7 +30,7 @@ def index(_):
 
 urlpatterns = [
     path('', index),
-    path('api/auth/login/', TokenObtainPairView.as_view(), name='auth-token'),
+    path('api/auth/login/', auth.login_local),
     path('api/auth/login/facebook/', auth.login_facebook),
 
     path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='auth-token-refresh'),

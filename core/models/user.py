@@ -48,7 +48,12 @@ class User(AbstractUser):
     # is_staff
     # is_active
     username = None
-    email = models.EmailField(_('email address'), unique=True)
+
+    display_name = models.CharField(_('display name'), max_length=150, blank=True)
+    email = models.EmailField(_('email address'))
+
+    provider_type = models.CharField(max_length=20, null=True)
+    provider_id = models.CharField(max_length=100, null=True)
 
     user_img = models.ForeignKey("core.UserImg", on_delete=models.DO_NOTHING, db_constraint=False,
                                  related_name="%(class)s_related", blank=True, null=True)
