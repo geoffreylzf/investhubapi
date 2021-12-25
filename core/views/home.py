@@ -7,7 +7,6 @@ from rest_framework.response import Response
 from core.models import Author
 from core.models.article import Article
 from core.models.article_view import ArticleView
-from core.serializers.author import AuthorSerializer
 from core.views.article import ArticleViewSet
 
 
@@ -23,7 +22,7 @@ def newest_articles(request):
         art_list.append({
             "id": a.id,
             "title": a.article_title,
-            "author_first_name": a.author.user.first_name,
+            "author_display_name": a.author.user.display_name,
             "publish_datetime": a.publish_datetime
         })
 
@@ -49,7 +48,7 @@ def newest_authors(request):
 
         aut_list.append({
             "id": aut.id,
-            "first_name": aut.user.first_name,
+            "display_name": aut.user.display_name,
             "img_path": img_path,
             "first_article_publish_datetime": first_article_publish_datetime
         })
@@ -75,7 +74,7 @@ def trend_articles(request):
             "id": a.id,
             "title": a.article_title,
             "view_count": o['count'],
-            "author_first_name": a.author.user.first_name,
+            "author_display_name": a.author.user.display_name,
             "publish_datetime": a.publish_datetime
         })
 

@@ -18,7 +18,7 @@ class ArticleViewSet(CReadOnlyModelViewSet):
 
     filter_field_contain_list = [
         ("article_title",),
-        ("author_first_name", "author__user__first_name")
+        ("author_display_name", "author__user__display_name")
     ]
 
     def get_serializer_class(self):

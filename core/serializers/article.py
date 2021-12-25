@@ -35,7 +35,7 @@ class ArticleParagraphSerializer(CModelSerializer):
 
 class ArticleAuthorSerializer(CModelSerializer):
     user = serializers.ReadOnlyField(source="user.id", default=None)
-    first_name = serializers.ReadOnlyField(source="user.first_name", default=None)
+    display_name = serializers.ReadOnlyField(source="user.display_name", default=None)
     img_path = serializers.ImageField(source="user.user_img.path", default=None, read_only=True)
     is_following = serializers.SerializerMethodField()
     current_user_support = serializers.SerializerMethodField()
@@ -45,7 +45,7 @@ class ArticleAuthorSerializer(CModelSerializer):
         fields = ('id',
                   'bio',
                   'user',
-                  'first_name',
+                  'display_name',
                   'img_path',
                   'is_following',
                   'current_user_support',)
@@ -98,7 +98,7 @@ class ArticleSerializer(CModelSerializer):
 
 
 class ListArticleSerializer(CModelSerializer):
-    author_first_name = serializers.ReadOnlyField(source="author.user.first_name", default=None)
+    author_display_name = serializers.ReadOnlyField(source="author.user.display_name", default=None)
     author_img_path = serializers.ImageField(source="author.user.user_img.path", default=None, read_only=True)
 
     topics = ArticleTopicSerializer(many=True)
@@ -110,7 +110,7 @@ class ListArticleSerializer(CModelSerializer):
         model = Article
         fields = ('id',
                   'article_title',
-                  'author_first_name',
+                  'author_display_name',
                   'author_img_path',
                   'topics',
                   'stock_counters',

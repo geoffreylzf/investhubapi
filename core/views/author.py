@@ -17,7 +17,7 @@ class AuthorViewSet(CReadOnlyModelViewSet):
     serializer_class = AuthorSerializer
 
     filter_field_contain_list = [
-        ("first_name", "user__first_name")
+        ("display_name", "user__display_name")
     ]
 
     @transaction.atomic

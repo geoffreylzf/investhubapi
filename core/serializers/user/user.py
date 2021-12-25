@@ -16,7 +16,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id',
                   'email',
-                  'first_name', 'last_name',
+                  'first_name', 'last_name', 'display_name',
                   'user_img', 'user_img_path',
                   'date_joined',
                   'is_active',
