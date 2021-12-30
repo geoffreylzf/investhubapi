@@ -35,7 +35,14 @@ from core.models import User
 #     return Response("Password changed")
 
 @api_view(['POST'])
-def login_local(request):
+def login(request):
+    provider = request.data.get('provider')
+    code = request.data.get('code')
+
+    if provider and code:
+        if provider == 'facebook':
+            return login_facebook(code)
+
     email = request.data.get('email')
     password = request.data.get('password')
 
@@ -58,41 +65,53 @@ def login_local(request):
 
 
 @api_view(['POST'])
-@authentication_classes([])
-@permission_classes([])
-def login_facebook(request):
-    access_token = request.data.get('access_token')
-    if access_token is None:
-        return Response("Please provide access_token", status.HTTP_406_NOT_ACCEPTABLE)
+def login_provider(request):
+    return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    res = requests.get('https://graph.facebook.com/v6.0/me', {
-        'access_token': access_token,
+
+def login_facebook(authorization_code):
+    # TODO put in env
+    res_auth = requests.get('https://graph.facebook.com/oauth/access_token', {
+        'client_id': '4668361359947698',
+        'client_secret': 'c7cfd3634e292e3af6aa1c948960728d',
+        'grant_type': 'authorization_code',
+        'code': authorization_code,
+        'redirect_uri': 'http://localhost:3001/login'
+    })
+    data_auth = json.loads(res_auth.text)
+
+    res_access = requests.get('https://graph.facebook.com/v12.0/me', {
+        'access_token': data_auth.get('access_token'),
         'fields': 'id, email, first_name, last_name, name'
     })
 
-    data = json.loads(res.text)
+    data = json.loads(res_access.text)
 
-    if res.status_code != 200:
-        print(res.text)
-        return Response(data, res.status_code)
-
+    id = data.get('id')
     email = data.get('email')
+    first_name = data.get('first_name', '')
+    last_name = data.get('last_name', '')
+    display_name = data.get('name', '')
+
+    if id is None:
+        return Response("Can not get facebook id", status.HTTP_406_NOT_ACCEPTABLE)
     if email is None:
         return Response("Can not get facebook registered email", status.HTTP_406_NOT_ACCEPTABLE)
 
     try:
-        user = User.objects.get(email=email)
-        if user.is_staff or user.is_superuser:
-            return Response("Forbidden Account", status.HTTP_403_FORBIDDEN)
-
+        user = User.objects.get(provider_type='facebook',
+                                provider_id=id)
     except User.DoesNotExist:
         user = None
 
     if user is None:
         user = User.objects.create_user(
             email=email,
-            first_name=data.get('first_name'),
-            last_name=data.get('last_name'),
+            first_name=first_name,
+            last_name=last_name,
+            display_name=display_name,
+            provider_type='facebook',
+            provider_id=id,
         )
 
     refresh = RefreshToken.for_user(user)
