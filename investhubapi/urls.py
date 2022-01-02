@@ -31,7 +31,6 @@ def index(_):
 urlpatterns = [
     path('', index),
     path('api/auth/login/', auth.login),
-    path('api/auth/login/facebook/', auth.login_provider),
 
     path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='auth-token-refresh'),
     path('api/auth/token/verify/', TokenVerifyView.as_view(), name='auth-token-verify'),

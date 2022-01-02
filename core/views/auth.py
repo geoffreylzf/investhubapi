@@ -1,6 +1,7 @@
 import json
 
 import requests
+from django.conf import settings
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
@@ -42,6 +43,8 @@ def login(request):
     if provider and code:
         if provider == 'facebook':
             return login_facebook(code)
+        elif provider == 'google':
+            return login_google(code)
 
     email = request.data.get('email')
     password = request.data.get('password')
@@ -70,37 +73,38 @@ def login_provider(request):
 
 
 def login_facebook(authorization_code):
-    # TODO put in env
-    res_auth = requests.get('https://graph.facebook.com/oauth/access_token', {
-        'client_id': '4668361359947698',
-        'client_secret': 'c7cfd3634e292e3af6aa1c948960728d',
+    provider = settings.OAUTH_PROVIDER
+
+    res_auth = requests.get(provider['FACEBOOK_OAUTH_URL'], {
+        'client_id': provider['FACEBOOK_CLIENT_ID'],
+        'client_secret': provider['FACEBOOK_CLIENT_SECRET'],
         'grant_type': 'authorization_code',
         'code': authorization_code,
-        'redirect_uri': 'http://localhost:3001/login'
+        'redirect_uri': provider['FACEBOOK_REDIRECT_URI']
     })
     data_auth = json.loads(res_auth.text)
 
-    res_access = requests.get('https://graph.facebook.com/v12.0/me', {
+    res_access = requests.get(provider['FACEBOOK_DATA_URL'], {
         'access_token': data_auth.get('access_token'),
-        'fields': 'id, email, first_name, last_name, name'
+        'fields': provider['FACEBOOK_DATA_FIELDS']
     })
 
     data = json.loads(res_access.text)
 
-    id = data.get('id')
+    facebook_id = data.get('id')
     email = data.get('email')
     first_name = data.get('first_name', '')
     last_name = data.get('last_name', '')
     display_name = data.get('name', '')
 
-    if id is None:
+    if facebook_id is None:
         return Response("Can not get facebook id", status.HTTP_406_NOT_ACCEPTABLE)
     if email is None:
         return Response("Can not get facebook registered email", status.HTTP_406_NOT_ACCEPTABLE)
 
     try:
         user = User.objects.get(provider_type='facebook',
-                                provider_id=id)
+                                provider_id=facebook_id)
     except User.DoesNotExist:
         user = None
 
@@ -111,7 +115,59 @@ def login_facebook(authorization_code):
             last_name=last_name,
             display_name=display_name,
             provider_type='facebook',
-            provider_id=id,
+            provider_id=facebook_id,
+        )
+
+    refresh = RefreshToken.for_user(user)
+    return Response({
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    })
+
+
+def login_google(authorization_code):
+    provider = settings.OAUTH_PROVIDER
+
+    res_auth = requests.post(provider['GOOGLE_OAUTH_URL'], {
+        'client_id': provider['GOOGLE_CLIENT_ID'],
+        'client_secret': provider['GOOGLE_CLIENT_SECRET'],
+        'grant_type': 'authorization_code',
+        'code': authorization_code,
+        'redirect_uri': provider['GOOGLE_REDIRECT_URI']
+    })
+    data_auth = json.loads(res_auth.text)
+
+    res_access = requests.get(provider['GOOGLE_DATA_URL'], {
+        'access_token': data_auth.get('access_token'),
+    })
+
+    data = json.loads(res_access.text)
+
+    google_id = data.get('id')
+    email = data.get('email')
+    first_name = data.get('given_name', '')
+    last_name = data.get('family_name', '')
+    display_name = data.get('name', '')
+
+    if google_id is None:
+        return Response("Can not get google id", status.HTTP_406_NOT_ACCEPTABLE)
+    if email is None:
+        return Response("Can not get google registered email", status.HTTP_406_NOT_ACCEPTABLE)
+
+    try:
+        user = User.objects.get(provider_type='google',
+                                provider_id=google_id)
+    except User.DoesNotExist:
+        user = None
+
+    if user is None:
+        user = User.objects.create_user(
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            display_name=display_name,
+            provider_type='google',
+            provider_id=google_id,
         )
 
     refresh = RefreshToken.for_user(user)
